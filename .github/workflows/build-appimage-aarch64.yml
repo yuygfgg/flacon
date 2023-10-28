@@ -2,101 +2,30 @@ name: Build AppImage aarch64
 
 on: [push]
 
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
-  LANG: en_US.UTF-8
-  LS_ALL: en_US.UTF-8
-  LANGUAGE: en_US:en
-  #PROGRAMS: alacenc faac flac lame mac oggenc opusenc sox ttaenc wavpack wvunpack
-  PROGRAMS: faac flac lame oggenc opusenc sox wavpack wvunpack
-
 jobs:
-  build:
+  armv7_job:
+    # The host should always be Linux
     runs-on: ubuntu-22.04
-
+    name: Build on ubuntu-18.04 armv7
     steps:
-    - uses: actions/checkout@v3
-    - uses: uraimo/run-on-arch-action@v2
-      name: Run commands
-      id: build
-      with:
-        arch: aarch64
-        distro: ubuntu20.04
+      - uses: actions/checkout@v4
+      - uses: uraimo/run-on-arch-action@v2
+        name: Run commands
+        id: runcmd
+        with:
+          arch: armv7
+          distro: ubuntu18.04
 
+          # Not required, but speeds up builds by storing container images in
+          # a GitHub package registry.
+          githubToken: ${{ github.token }}
+
+          # Set an output parameter `uname` for use in subsequent steps
+          run: |
+            uname -a
+            echo ::set-output name=uname::$(uname -a)
+
+      - name: Get the output
+        # Echo the `uname` output parameter from the `runcmd` step
         run: |
-          uname -a
-          echo ::set-output name=uname::$(uname -a)
-
-          echo "░░ Set env ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
-          echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-          [[ "${GITHUB_REF_TYPE}"  = "tag" ]] && echo APPIMAGE_NAME="flacon-${GITHUB_REF_NAME:1}-aarch64.AppImage" >> $GITHUB_ENV
-          [[ "${GITHUB_REF_TYPE}" != "tag" ]] && echo APPIMAGE_NAME="flacon-$(date +%Y.%m.%d_%H.%M.%S)-aarch64.AppImage" >> $GITHUB_ENV
-
-          echo "==============================="
-          export
-          echo "-------------------------------"
-          cat $GITHUB_ENV
-          echo "==============================="
-          uname -a
-
-          echo "░░ Install packages Set env ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
-          echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
-          sudo apt-get -y update
-          sudo apt-get -y install locales
-          sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-          sudo apt-get -y install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev
-          sudo apt-get -y install flac vorbis-tools wavpack lame faac opus-tools sox
-          sudo apt-get -y install desktop-file-utils
-
-          echo "░░ Build Flacon ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
-          cmake -E make_directory ${{github.workspace}}/build
-          cmake -E make_directory ${{github.workspace}}/build/app
-          cmake -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/build/app/usr -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE $GITHUB_WORKSPACE -B ${{github.workspace}}/build
-          make -C ${{github.workspace}}/build -j 8
-          make -C ${{github.workspace}}/build install
-
-    - name: Clone tools
-      run: |
-        git clone --depth 1 https://github.com/SokoloffA/nightly-tools.git ~/tools
-        echo PATH=~/tools/appimage/usr/bin:$PATH >> $GITHUB_ENV
-        echo LD_LIBRARY_PATH=~/tools/appimage/usr/lib >> $GITHUB_ENV
-
-    - name: Build AppImage dir
-      working-directory: ${{github.workspace}}/build/app
-      run: |
-        echo "==============================="
-        export PATH=~/tools/appimage/usr/bin:$PATH
-        export LD_LIBRARY_PATH=~/tools/appimage/usr/lib
-        echo "= Create symlinks ============="
-        ln -sf usr/bin/flacon AppRun
-        ln -sf usr/share/icons/hicolor/128x128/apps/flacon.png .
-        ln -sf ./flacon.png  ./.DirIcon
-        ln -sf usr/share/applications/flacon.desktop .
-        echo "= Add programs ================"
-        for prog in ${PROGRAMS}; do echo " * Copy ${prog}"; src=$(which "$prog"); dest=${src#/}; cp -f "${src}" "usr/bin/"; done
-        echo "= Build image ================="
-        linuxdeploy --verbosity=3  --plugin qt --appdir "${{github.workspace}}/build/app"
-
-    - name: Check AppImage dir
-      run: |
-        /bin/bash ~/tools/appdir-lint.sh ${{github.workspace}}/build/app
-
-    - name: Check external programs
-      working-directory: ${{github.workspace}}
-      run: |
-        scripts/check-extprograms.sh . ${{github.workspace}}/build/app/usr/bin
-
-    - name: Build AppImage file
-      working-directory: ${{github.workspace}}/build/app
-      run: |
-        appimagetool "${{github.workspace}}/build/app" "${{github.workspace}}/build/${{ env.APPIMAGE_NAME }}"
-
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ env.APPIMAGE_NAME }}
-        path: "${{github.workspace}}/build/${{ env.APPIMAGE_NAME }}"
+          echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
