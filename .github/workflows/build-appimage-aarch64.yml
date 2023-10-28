@@ -16,15 +16,18 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - uses: uraimo/run-on-arch-action@v2
       name: Run commands
-      id: runcmd
+      id: build
       with:
         arch: aarch64
         distro: ubuntu20.04
 
         run: |
+          uname -a
+          echo ::set-output name=uname::$(uname -a)
+
           echo "░░ Set env ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
           echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
