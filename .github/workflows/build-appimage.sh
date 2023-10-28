@@ -24,8 +24,9 @@ apt-get -y install flac vorbis-tools wavpack lame faac opus-tools sox
 apt-get -y install desktop-file-utils
 
 echo "░░ Build Flacon ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+set -x
 cmake -E make_directory build
 cmake -E make_directory build/app
-cmake -DCMAKE_INSTALL_PREFIX=build/app/usr -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE $GITHUB_WORKSPACE -B build
+cmake -DCMAKE_INSTALL_PREFIX=build/app/usr -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE -B build $GITHUB_WORKSPACE
 make -C build -j 8
 make -C build install
