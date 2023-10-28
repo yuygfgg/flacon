@@ -1,4 +1,4 @@
-name: Build AppImage
+name: Build AppImage aarch64
 
 on: [push]
 
@@ -14,61 +14,50 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    name: Build on ubuntu-20.04 aarm64
 
     steps:
-    - name: Set env
-      run: |
-        echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
-        echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+    - uses: actions/checkout@v4
+    - uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: aarch64
+        istro: ubuntu20.04
 
-        [[ "${GITHUB_REF_TYPE}"  = "tag" ]] && echo APPIMAGE_NAME="flacon-${GITHUB_REF_NAME:1}-aarch64.AppImage" >> $GITHUB_ENV
-        [[ "${GITHUB_REF_TYPE}" != "tag" ]] && echo APPIMAGE_NAME="flacon-$(date +%Y.%m.%d_%H.%M.%S)-aarch64.AppImage" >> $GITHUB_ENV
+        run: |
+          echo "░░ Set env ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+          echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-        echo "==============================="
-        export
-        echo "-------------------------------"
-        cat $GITHUB_ENV
-        echo "==============================="
-        uname -a
+          [[ "${GITHUB_REF_TYPE}"  = "tag" ]] && echo APPIMAGE_NAME="flacon-${GITHUB_REF_NAME:1}-aarch64.AppImage" >> $GITHUB_ENV
+          [[ "${GITHUB_REF_TYPE}" != "tag" ]] && echo APPIMAGE_NAME="flacon-$(date +%Y.%m.%d_%H.%M.%S)-aarch64.AppImage" >> $GITHUB_ENV
 
-    - uses: actions/checkout@v3
+          echo "==============================="
+          export
+          echo "-------------------------------"
+          cat $GITHUB_ENV
+          echo "==============================="
+          uname -a
 
-    - name: Install packages
-      run:  |
-        echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
-        sudo apt-get -y update
-        sudo apt-get -y install locales
-        sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-        sudo apt-get -y install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev
-        sudo apt-get -y install flac vorbis-tools wavpack lame faac opus-tools sox
-        sudo apt-get -y install desktop-file-utils
+          echo "░░ Install packages Set env ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+          echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
+          sudo apt-get -y update
+          sudo apt-get -y install locales
+          sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+          sudo apt-get -y install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev
+          sudo apt-get -y install flac vorbis-tools wavpack lame faac opus-tools sox
+          sudo apt-get -y install desktop-file-utils
+
+          echo "░░ Build Flacon ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+          cmake -E make_directory ${{github.workspace}}/build
+          cmake -E make_directory ${{github.workspace}}/build/app
+          cmake -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/build/app/usr -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE $GITHUB_WORKSPACE -B ${{github.workspace}}/build
+          make -C ${{github.workspace}}/build -j 8
+          make -C ${{github.workspace}}/build install
 
     - name: Clone tools
       run: |
         git clone --depth 1 https://github.com/SokoloffA/nightly-tools.git ~/tools
         echo PATH=~/tools/appimage/usr/bin:$PATH >> $GITHUB_ENV
         echo LD_LIBRARY_PATH=~/tools/appimage/usr/lib >> $GITHUB_ENV
-
-    - name: Create Build Environment
-      run: |
-        cmake -E make_directory ${{github.workspace}}/build
-        cmake -E make_directory ${{github.workspace}}/build/app
-
-    - name: Run CMake
-      shell: bash
-      working-directory: ${{github.workspace}}/build
-      run: cmake -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/build/app/usr -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE $GITHUB_WORKSPACE
-
-    - name: Build Flacon
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      run: make -j 8
-
-    - name: Install Flacon
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      run: make install
 
     - name: Build AppImage dir
       working-directory: ${{github.workspace}}/build/app
