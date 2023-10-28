@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-set -x
+#set -x
 
 PROGRAMS="alacenc faac flac lame mac oggenc opusenc sox ttaenc wavpack wvunpack"
 export "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)"
@@ -15,7 +15,7 @@ echo "░░░░░░░░░░░░░░░░░░░░░░░░�
 
 
 echo "░░ Install packages ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
-echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 apt-get -y update
 apt-get -y install locales
 sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
