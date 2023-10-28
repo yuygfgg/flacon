@@ -18,9 +18,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: uraimo/run-on-arch-action@v2
+      name: Run commands
+      id: runcmd
       with:
         arch: aarch64
-        istro: ubuntu20.04
+        distro: ubuntu20.04
 
         run: |
           echo "░░ Set env ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
