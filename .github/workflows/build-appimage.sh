@@ -16,12 +16,12 @@ echo "░░░░░░░░░░░░░░░░░░░░░░░░�
 
 echo "░░ Install packages ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
 echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
-sudo apt-get -y update
-sudo apt-get -y install locales
-sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-sudo apt-get -y install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev
-sudo apt-get -y install flac vorbis-tools wavpack lame faac opus-tools sox
-sudo apt-get -y install desktop-file-utils
+apt-get -y update
+apt-get -y install locales
+sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+apt-get -y install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev
+apt-get -y install flac vorbis-tools wavpack lame faac opus-tools sox
+apt-get -y install desktop-file-utils
 
 echo "░░ Build Flacon ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
 cmake -E make_directory build
