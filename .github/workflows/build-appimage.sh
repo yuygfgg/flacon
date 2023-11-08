@@ -19,7 +19,7 @@ echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 apt-get -y update
 apt-get -y install locales
 sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-apt-get -y install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev
+apt-get -y install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev zlib1g-dev
 apt-get -y install flac vorbis-tools wavpack lame faac opus-tools sox
 apt-get -y install desktop-file-utils
 
