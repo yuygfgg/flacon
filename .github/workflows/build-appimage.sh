@@ -1,38 +1,48 @@
 #!/bin/bash
 
 set -e
-#set -x
+set -x
 
 HEAD="\e[01;38;05;232;48;05;180m"
 NORM="\e[32;46m"
 
 function TITLE() {
-    printf "\e[01;38;05;232;48;05;180m%-70s\e[32;46m" "$1"
+    echo -en "\e[01;38;05;232;48;05;173m"
+    printf   "%-70s" "$1"
+    echo -e  "\e[32;46m"
 }
 
 PROGRAMS="alacenc faac flac lame mac oggenc opusenc sox ttaenc wavpack wvunpack"
 export "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)"
 export "RELEASE_VERSION=${GITHUB_REF#refs/*/}"
 
+
 TITLE "Set env"
-#echo "$HEAD Set env ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░${NORM}"
-echo "░░ * APPIMAGE_NAME: ${APPIMAGE_NAME}"
-echo "░░ * PROGRAMS:      ${PROGRAMS}"
-echo "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+echo " * APPIMAGE_NAME: ${APPIMAGE_NAME}"
+echo " * PROGRAMS:      ${PROGRAMS}"
 export
-echo "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
 
 
-echo "░░ Install packages ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+
+TITLE "Install packages"
 echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+echo "1 ================="
 apt-get -y -qq update
+echo "2 ================="
 apt-get -y -qq install locales
+echo "3 ================="
 sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+echo "4 ================="
 apt-get -y -qq install build-essential pkg-config cmake  qtbase5-dev qttools5-dev-tools qttools5-dev libuchardet-dev libtag1-dev zlib1g-dev
+echo "5 ================="
 apt-get -y -qq install flac vorbis-tools wavpack lame faac opus-tools sox
+echo "5 ================="
 apt-get -y -qq install desktop-file-utils
+echo "6 ================="
 
-echo "░░ Build Flacon ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+
+
+TITLE "Build Flacon"
 set -x
 cmake -E make_directory build
 cmake -E make_directory build/app
