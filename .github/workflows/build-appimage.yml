@@ -22,6 +22,8 @@ jobs:
 
     - name: Set env
       run: |
+        sudo sed -i'' -E 's/^(deb|deb-src) http:\/\/(archive|azure.archive|security).ubuntu.com/\1 [arch=amd64,i386] http:\/\/\2.ubuntu.com/' /etc/apt/sources.list
+
         export ARCH=${{matrix.arch}}
         echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
         echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}"   >> ${GITHUB_ENV}
@@ -43,7 +45,7 @@ jobs:
 
     - name: Prepare
       run: |
-        sudo sed -i'' -E 's/^(deb|deb-src) http:\/\/(archive|azure.archive|security).ubuntu.com/\1 [arch=amd64,i386] http:\/\/\2.ubuntu.com/' /etc/apt/sources.list
+
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} main restricted" >> /etc/apt/sources.list
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME}-updates main restricted" >> /etc/apt/sources.list
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} universe" >> /etc/apt/sources.list
