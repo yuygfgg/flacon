@@ -45,7 +45,7 @@ jobs:
       run: |
         id
         ls -l /etc/apt
-        sed  -e "s|^deb |deb [arch=amd64] |" -i /etc/apt/sources.list
+        sudo sed  -e "s|^deb |deb [arch=amd64] |" -i /etc/apt/sources.list
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} main restricted" >> /etc/apt/sources.list
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME}-updates main restricted" >> /etc/apt/sources.list
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} universe" >> /etc/apt/sources.list
@@ -55,16 +55,16 @@ jobs:
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME}-backports main restricted universe multiverse" >> /etc/apt/sources.list
 
         echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
-        dpkg --add-architecture ${ARCH}
+        sudo dpkg --add-architecture ${ARCH}
 
 
         echo "Installing packages ***********************************"
-        apt-get -y update > /dev/null
-        apt-get -y --no-install-recommends install locales  > /dev/null
+        sudo apt-get -y update > /dev/null
+        sudo apt-get -y --no-install-recommends install locales  > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-        apt-get -y --no-install-recommends install gcc-${DEB_TARGET_GNU_TYPE} g++-${DEB_TARGET_GNU_TYPE} pkg-config cmake git jq
-        apt-get -y --no-install-recommends install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
+        sudo apt-get -y --no-install-recommends install gcc-${DEB_TARGET_GNU_TYPE} g++-${DEB_TARGET_GNU_TYPE} pkg-config cmake git jq
+        sudo apt-get -y --no-install-recommends install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
 
 
         echo "Create toolchain file ***********************************"
