@@ -43,7 +43,14 @@ jobs:
 
     - name: Prepare
       run: |
-        sudo sed -i'' -E 's/^(deb|deb-src) http:\/\/(archive|azure.archive|security).ubuntu.com/\1 [arch=amd64,i386] http:\/\/\2.ubuntu.com/' /etc/apt/sources.list
+        sudo sed  -e "s|^deb |deb [arch=amd64] |" -i'' /etc/apt/sources.list
+        echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} main restricted" >> /etc/apt/sources.list
+        echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME}-updates main restricted" >> /etc/apt/sources.list
+        echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} universe" >> /etc/apt/sources.list
+        echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME}-updates universe" >> /etc/apt/sources.list
+        echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} multiverse" >> /etc/apt/sources.list
+        echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME}-updates multiverse" >> /etc/apt/sources.list
+        echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME}-backports main restricted universe multiverse" >> /etc/apt/sources.list
 
         echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
         sudo dpkg --add-architecture ${ARCH}
