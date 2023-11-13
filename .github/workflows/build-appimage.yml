@@ -47,6 +47,8 @@ jobs:
         ls -l /etc/apt
         echo "==============================="
         cat /etc/apt/sources.list
+        echo "-------------------------------"
+        cat /etc/apt/apt-mirrors.txt
         echo "==============================="
         sudo sed  -e "s|^deb |deb [arch=amd64] |" -i /etc/apt/sources.list
         echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ ${DISTRIB_CODENAME} main restricted" >> /etc/apt/sources.list
