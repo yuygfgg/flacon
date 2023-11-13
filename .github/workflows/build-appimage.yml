@@ -43,6 +43,7 @@ jobs:
 
     - name: Prepare
       run: |
+        sudo sed -i'' -E 's/^(deb|deb-src) http:\/\/(archive|azure.archive|security).ubuntu.com/\1 [arch=amd64,i386] http:\/\/\2.ubuntu.com/' /etc/apt/sources.list
 
         echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
         sudo dpkg --add-architecture ${ARCH}
