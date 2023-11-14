@@ -75,7 +75,8 @@ jobs:
         echo "##########################################################################"
         echo "##########################################################################"
         echo "##########################################################################"
-        sudo apt-get -y install qtbase5-dev:${ARCH} \
+        sudo apt-get -y install --no-install-recommends \
+          qtbase5-dev:${ARCH} \
           libqt5concurrent5:${ARCH} \
           libqt5core5a:${ARCH} \
           libqt5dbus5:${ARCH} \
