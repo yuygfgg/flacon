@@ -22,8 +22,15 @@ jobs:
 
     - name: Set env
       run: |
-        sudo sed -i'' -E 's/^(deb|deb-src) http:\/\/(archive|azure.archive|security).ubuntu.com/\1 [arch=amd64,i386] http:\/\/\2.ubuntu.com/' /etc/apt/sources.list
+        sudo dpkg --add-architecture ${{matrix.arch}}
+        sudo sed -i'' -E 's/^(deb|deb-src) /\1 [arch=amd64,i386] /' /etc/apt/sources.list
         cat /etc/apt/sources.list
+
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs) main restricted universe" | sudo tee /etc/apt/sources.list.d/arm64.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-updates main restricted universe" | sudo tee -a /etc/apt/sources.list.d/arm64.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-security main restricted universe" | sudo tee -a /etc/apt/sources.list.d/arm64.list
+        cat /etc/apt/sources.list.d/arm64.list
+
 
         export ARCH=${{matrix.arch}}
         echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
