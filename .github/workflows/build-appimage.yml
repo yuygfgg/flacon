@@ -63,17 +63,25 @@ jobs:
         echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-updates main restricted universe" | sudo tee -a /etc/apt/sources.list.d/arm64.list
         echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-security main restricted universe" | sudo tee -a /etc/apt/sources.list.d/arm64.list
 
-
-        echo "Installing packages ***********************************"
         sudo apt-get -y update > /dev/null
+
+    - name: Installing packages
+      run: |
         sudo apt-get -y --no-install-recommends install locales  > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
         sudo apt-get -y install gcc-${DEB_TARGET_GNU_TYPE} g++-${DEB_TARGET_GNU_TYPE} pkg-config cmake git jq
-        sudo apt-get -y install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
+        echo "##########################################################################"
+        echo "##########################################################################"
+        echo "##########################################################################"
+        echo "##########################################################################"
+        sudo apt -y install qtbase5-dev:${ARCH}
+
+#        sudo apt-get -y install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
 
 
-        echo "Create toolchain file ***********************************"
+    - name: Create toolchain file
+      run: |
         echo "" > ${HOME}/toolchain.cmake
         echo "set(TOLLCHAIN_DIR /usr)"                                                                                                    >> ${HOME}/toolchain.cmake
         echo "set(CMAKE_SYSTEM_NAME Linux)"                                                                                               >> ${HOME}/toolchain.cmake
