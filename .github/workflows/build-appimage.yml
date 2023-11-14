@@ -87,7 +87,12 @@ jobs:
           libqt5test5:${ARCH} \
           libqt5widgets5:${ARCH} \
           libqt5xml5:${ARCH} \
-          libqt5opengl5-dev:${ARCH}
+          libqt5opengl5-dev:${ARCH} \
+          libglib2.0-0:${ARCH} \
+          libpcre2-16-0:${ARCH} \
+          libglib2.0-0:${ARCH} \
+          libharfbuzz0b:${ARCH} \
+          libinput10:${ARCH}
 
 #        sudo apt-get -y install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
 
