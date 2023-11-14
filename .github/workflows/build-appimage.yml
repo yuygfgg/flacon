@@ -93,7 +93,8 @@ jobs:
           libharfbuzz0b:${ARCH} \
           libinput10:${ARCH} \
           libmount1:${ARCH} \
-          libselinux1:${ARCH}
+          libselinux1:${ARCH} \
+          libpcre2-8-0:${ARCH}
 
 #        sudo apt-get -y install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
 
