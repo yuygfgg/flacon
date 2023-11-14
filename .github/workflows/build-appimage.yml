@@ -73,29 +73,31 @@ jobs:
         sudo apt-get -y install gcc-${DEB_TARGET_GNU_TYPE} g++-${DEB_TARGET_GNU_TYPE} pkg-config cmake git jq
         echo "##########################################################################"
         echo "##########################################################################"
+        cat /etc/apt/sources.list
         echo "##########################################################################"
         echo "##########################################################################"
-        sudo apt-get -y install --no-install-recommends \
-          qtbase5-dev:${ARCH} \
-          libqt5concurrent5:${ARCH} \
-          libqt5core5a:${ARCH} \
-          libqt5dbus5:${ARCH} \
-          libqt5gui5:${ARCH} \
-          libqt5network5:${ARCH} \
-          libqt5printsupport5:${ARCH} \
-          libqt5sql5:${ARCH} \
-          libqt5test5:${ARCH} \
-          libqt5widgets5:${ARCH} \
-          libqt5xml5:${ARCH} \
-          libqt5opengl5-dev:${ARCH} \
-          libglib2.0-0:${ARCH} \
-          libpcre2-16-0:${ARCH} \
-          libglib2.0-0:${ARCH} \
-          libharfbuzz0b:${ARCH} \
-          libinput10:${ARCH} \
-          libmount1:${ARCH} \
-          libselinux1:${ARCH} \
-          libpcre2-8-0:${ARCH}
+        sudo apt-get update
+        sudo apt-get -y install --no-install-recommends qtbase5-dev:${ARCH}
+
+          # libqt5concurrent5:${ARCH} \
+          # libqt5core5a:${ARCH} \
+          # libqt5dbus5:${ARCH} \
+          # libqt5gui5:${ARCH} \
+          # libqt5network5:${ARCH} \
+          # libqt5printsupport5:${ARCH} \
+          # libqt5sql5:${ARCH} \
+          # libqt5test5:${ARCH} \
+          # libqt5widgets5:${ARCH} \
+          # libqt5xml5:${ARCH} \
+          # libqt5opengl5-dev:${ARCH} \
+          # libglib2.0-0:${ARCH} \
+          # libpcre2-16-0:${ARCH} \
+          # libglib2.0-0:${ARCH} \
+          # libharfbuzz0b:${ARCH} \
+          # libinput10:${ARCH} \
+          # libmount1:${ARCH} \
+          # libselinux1:${ARCH} \
+          # libpcre2-8-0:${ARCH}
 
 #        sudo apt-get -y install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
 
