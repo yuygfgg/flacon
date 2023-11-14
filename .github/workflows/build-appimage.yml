@@ -55,7 +55,7 @@ jobs:
 
     - name: Installing packages
       run: |
-        sudo apt-get -y --no-install-recommends install locales  > /dev/null
+        sudo apt-get -y --no-install-recommends install locales aptitude > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
         sudo apt-get -y install gcc-${DEB_TARGET_GNU_TYPE} g++-${DEB_TARGET_GNU_TYPE} pkg-config cmake git jq
@@ -65,7 +65,7 @@ jobs:
         echo "##########################################################################"
         echo "##########################################################################"
         sudo apt-get update
-        sudo apt-get -y install --no-install-recommends qtbase5-dev:${ARCH}
+        sudo aptitude -y install qtbase5-dev:${ARCH}
 
           # libqt5concurrent5:${ARCH} \
           # libqt5core5a:${ARCH} \
