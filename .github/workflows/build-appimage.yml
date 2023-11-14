@@ -75,24 +75,25 @@ jobs:
         echo "##########################################################################"
         echo "##########################################################################"
         echo "##########################################################################"
-        sudo apt-get -y install -a ${ARCH} qtbase5-dev
-
-#          # libqt5concurrent5:${ARCH} \
-#          # libqt5core5a:${ARCH} \
-#          # libqt5dbus5:${ARCH} \
-#          # libqt5gui5:${ARCH} \
-#          # libqt5network5:${ARCH} \
-#          # libqt5printsupport5:${ARCH} \
-#          # libqt5sql5:${ARCH} \
-#          # libqt5test5:${ARCH} \
-#          # libqt5widgets5:${ARCH} \
-#          # libqt5xml5:${ARCH} \
-#          # libqt5opengl5-dev:${ARCH} \
-#          # libglib2.0-0:${ARCH} \
-#          # libpcre2-16-0:${ARCH} \
-#          # libglib2.0-0:${ARCH} \
-#          # libharfbuzz0b:${ARCH} \
-#          # libinput10:${ARCH}
+        sudo apt-get -y install qtbase5-dev:${ARCH} \
+          libqt5concurrent5:${ARCH} \
+          libqt5core5a:${ARCH} \
+          libqt5dbus5:${ARCH} \
+          libqt5gui5:${ARCH} \
+          libqt5network5:${ARCH} \
+          libqt5printsupport5:${ARCH} \
+          libqt5sql5:${ARCH} \
+          libqt5test5:${ARCH} \
+          libqt5widgets5:${ARCH} \
+          libqt5xml5:${ARCH} \
+          libqt5opengl5-dev:${ARCH} \
+          libglib2.0-0:${ARCH} \
+          libpcre2-16-0:${ARCH} \
+          libglib2.0-0:${ARCH} \
+          libharfbuzz0b:${ARCH} \
+          libinput10:${ARCH} \
+          libmount1:${ARCH} \
+          libselinux1:${ARCH}
 
 #        sudo apt-get -y install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
 
