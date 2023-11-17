@@ -71,6 +71,18 @@ jobs:
           jq \
           aptitude
 
+        sudo apt-get -y install \
+          qtbase5-dev:${ARCH} \
+          qttools5-dev-tools:${ARCH} \
+          qttools5-dev:${ARCH} \
+          libuchardet-dev:${ARCH} \
+          libtag1-dev:${ARCH} \
+          zlib1g-dev:${ARCH}
+
+        echo "============================"
+        ls /usr/lib/aarch64-linux-gnu/cmake
+        echo "============================"
+
         sudo aptitude -y --quiet install \
           qtbase5-dev:${ARCH} \
           qttools5-dev-tools:${ARCH} \
