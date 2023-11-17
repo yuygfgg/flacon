@@ -44,7 +44,7 @@ jobs:
 
     - name: Prepare
       run: |
-        sudo echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+        sudo echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
         sudo dpkg --add-architecture ${{matrix.arch}}
         sudo sed -i'' -E 's/^(deb|deb-src) /\1 [arch=amd64,i386] /' /etc/apt/sources.list
 
