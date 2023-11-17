@@ -126,6 +126,10 @@ jobs:
         echo 'add_executable(ttaenc ttaenc.h ttaenc.c) CMakeLists.txt'  >> CMakeLists.txt
         echo 'install(TARGETS ttaenc RUNTIME DESTINATION bin)'  >> CMakeLists.txt
 
+        echo "===================================================="
+        cat CMakeLists.txt
+        echo "===================================================="
+
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
         make  -Cbuild -j4
         cmake --install build --prefix "${APP_DIR}"
