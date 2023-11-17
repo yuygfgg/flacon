@@ -60,13 +60,24 @@ jobs:
         sudo apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-        sudo apt-get -y install gcc-${DEB_TARGET_GNU_TYPE} g++-${DEB_TARGET_GNU_TYPE} pkg-config cmake git jq aptitude
+        sudo apt-get -y install \
+          gcc-${DEB_TARGET_GNU_TYPE} \
+          g++-${DEB_TARGET_GNU_TYPE} \
+          pkg-config \
+          dpkg-dev \
+          cross-config \
+          cmake \
+          git \
+          jq \
+          aptitude
+
         sudo aptitude -y --quiet install \
           qtbase5-dev:${ARCH} \
           qttools5-dev-tools:${ARCH} \
           qttools5-dev:${ARCH} \
           libuchardet-dev:${ARCH} \
-          libtag1-dev:${ARCH}
+          libtag1-dev:${ARCH} \
+          zlib1g-dev:${ARCH}
 
 
     - name: Create toolchain file
