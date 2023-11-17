@@ -71,7 +71,7 @@ jobs:
           jq \
           aptitude
 
-        sudo aptitude -y --quiet install \
+        sudo apt-get -y -f install \
           qtbase5-dev:${ARCH} \
           qttools5-dev-tools:${ARCH} \
           qttools5-dev:${ARCH} \
