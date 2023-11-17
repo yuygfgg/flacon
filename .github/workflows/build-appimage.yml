@@ -9,6 +9,7 @@ env:
   LS_ALL: en_US.UTF-8
   LANGUAGE: en_US:en
   PROGRAMS: alacenc faac flac lame mac oggenc opusenc sox ttaenc wavpack wvunpack
+  MAC_URL: https://monkeysaudio.com/files/MAC_1027_SDK.zip
 
 jobs:
   build_appimage:
@@ -59,35 +60,12 @@ jobs:
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
         sudo apt-get -y install gcc-${DEB_TARGET_GNU_TYPE} g++-${DEB_TARGET_GNU_TYPE} pkg-config cmake git jq
-        echo "##########################################################################"
-        echo "##########################################################################"
-        cat /etc/apt/sources.list
-        echo "##########################################################################"
-        echo "##########################################################################"
-        sudo apt-get update
-        sudo aptitude -y install qtbase5-dev:${ARCH}
-
-          # libqt5concurrent5:${ARCH} \
-          # libqt5core5a:${ARCH} \
-          # libqt5dbus5:${ARCH} \
-          # libqt5gui5:${ARCH} \
-          # libqt5network5:${ARCH} \
-          # libqt5printsupport5:${ARCH} \
-          # libqt5sql5:${ARCH} \
-          # libqt5test5:${ARCH} \
-          # libqt5widgets5:${ARCH} \
-          # libqt5xml5:${ARCH} \
-          # libqt5opengl5-dev:${ARCH} \
-          # libglib2.0-0:${ARCH} \
-          # libpcre2-16-0:${ARCH} \
-          # libglib2.0-0:${ARCH} \
-          # libharfbuzz0b:${ARCH} \
-          # libinput10:${ARCH} \
-          # libmount1:${ARCH} \
-          # libselinux1:${ARCH} \
-          # libpcre2-8-0:${ARCH}
-
-#        sudo apt-get -y install qtbase5-dev:${ARCH} qttools5-dev-tools:${ARCH} qttools5-dev:${ARCH} libuchardet-dev:${ARCH} libtag1-dev:${ARCH}
+        sudo aptitude -y --quiet install \
+          qtbase5-dev:${ARCH} \
+          qttools5-dev-tools:${ARCH} \
+          qttools5-dev:${ARCH} \
+          libuchardet-dev:${ARCH} \
+          libtag1-dev:${ARCH}
 
 
     - name: Create toolchain file
@@ -112,7 +90,6 @@ jobs:
 
 
     # ===========================================
-
     - name: Build alacenc
       run: |
 
@@ -129,11 +106,42 @@ jobs:
         install -D build/alacenc ${APP_DIR}/usr/alacenc
 
 
+    # ===========================================
+    - name: Build mac
+      run: |
 
+        mkdir ${HOME}/ttaenc && cd ${HOME}/ttaenc
+
+        export URL=$(curl -s -L  'https://api.github.com/repos/flacon/flacon.third-party/releases/latest' | jq -r '.tarball_url')
+        echo $URL
+        curl -s -L "$URL" > sources.tgz
+        mkdir -p sources
+        tar -xf sources.tgz --directory sources --strip-components=1
+
+        make -C sources/ttaenc/ttaenc-3.4.1
+        install -D sources/ttaenc/ttaenc-3.4.1/ttaenc ${APP_DIR}/usr/alacenc
+
+
+
+    # ===========================================
+    - name: Build mac
+      run: |
+
+        mkdir ${HOME}/mac && cd ${HOME}/mac
+
+        curl -s -L "$MAC_URL" > sources.zip
+        unzip sources.zip
+
+        cmake -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
+        cmake --build
+        cmake --install . --prefix ${APP_DIR}
+
+
+    # ===========================================
+    - name: CHECH
+      run: |
         echo "= ${APP_DIR} ======================"
-        ls ${APP_DIR}
-        echo "-----------------------------------"
-        ls ${APP_DIR}/usr
+        find ${APP_DIR}
         echo "==================================="
 
 
