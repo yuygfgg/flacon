@@ -71,6 +71,11 @@ jobs:
           jq \
           aptitude
 
+        echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
+        aptitude why qtbase5-dev:${ARCH}
+        echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
+
+
         sudo apt-get -y -f install \
           qtbase5-dev:${ARCH} \
           qttools5-dev-tools:${ARCH} \
