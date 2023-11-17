@@ -130,7 +130,7 @@ jobs:
         echo 'if ( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )'  >> CMakeLists.txt
         echo '  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse")'  >> CMakeLists.txt
         echo 'endif()'  >> CMakeLists.txt
-        echo 'add_executable(ttaenc ttaenc.h ttaenc.c) CMakeLists.txt'  >> CMakeLists.txt
+        echo 'add_executable(ttaenc ttaenc.h ttaenc.c)'  >> CMakeLists.txt
         echo 'install(TARGETS ttaenc RUNTIME DESTINATION bin)'  >> CMakeLists.txt
 
         echo "===================================================="
