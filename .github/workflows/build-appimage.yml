@@ -117,7 +117,7 @@ jobs:
         echo $URL
         curl -s -L "$URL" > sources.tgz
         tar -xf sources.tgz --strip-components=1
-        cd /master/ttaenc/ttaenc-3.4.1
+        cd master/ttaenc/ttaenc-3.4.1
         pwd
 
         echo 'project(ttaenc LANGUAGES C)'  >> CMakeLists.txt
