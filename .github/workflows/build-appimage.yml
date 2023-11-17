@@ -98,7 +98,7 @@ jobs:
         mkdir ${HOME}/alacenc && cd ${HOME}/alacenc
 
         export URL=$(curl -s -L  'https://api.github.com/repos/flacon/alacenc/releases/latest' | jq -r '.tarball_url')
-        echo $URL
+        echo "Download $URL"
         curl -s -L "$URL" > sources.tgz
         tar -xf sources.tgz --strip-components=1
 
@@ -114,7 +114,7 @@ jobs:
         mkdir ${HOME}/ttaenc && cd ${HOME}/ttaenc
 
         export URL=$(curl -s -L  'https://api.github.com/repos/flacon/flacon.third-party/releases/latest' | jq -r '.tarball_url')
-        echo $URL
+        echo "Download $URL"
         curl -s -L "$URL" > sources.tgz
         tar -xf sources.tgz --strip-components=1
         pwd
@@ -122,7 +122,7 @@ jobs:
         ls -l
         echo "=========================="
 
-        cd master/ttaenc/ttaenc-3.4.1
+        cd ttaenc/ttaenc-3.4.1
         pwd
 
         echo 'project(ttaenc LANGUAGES C)'  >> CMakeLists.txt
