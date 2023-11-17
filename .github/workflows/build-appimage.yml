@@ -104,7 +104,7 @@ jobs:
 
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${APP_DIR}/usr .
         make  -Cbuild -j4
-        cmake -Bbuild --install . --prefix ${APP_DIR}
+        cmake --install build --prefix "${APP_DIR}"
 
 
     # ===========================================
@@ -128,7 +128,7 @@ jobs:
 
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
         make  -Cbuild -j4
-        cmake -Bbuild --install . --prefix ${APP_DIR}
+        cmake --install build --prefix "${APP_DIR}"
 
 
     # ===========================================
@@ -142,7 +142,7 @@ jobs:
 
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
         make  -Cbuild -j4
-        cmake -Bbuild --install . --prefix ${APP_DIR}
+        cmake --install build --prefix "${APP_DIR}"
 
 
     # ===========================================
