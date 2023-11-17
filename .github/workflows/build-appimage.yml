@@ -117,13 +117,7 @@ jobs:
         echo "Download $URL"
         curl -s -L "$URL" > sources.tgz
         tar -xf sources.tgz --strip-components=1
-        pwd
-        echo "=========================="
-        ls -l
-        echo "=========================="
-
         cd ttaenc/ttaenc-3.4.1
-        pwd
 
         echo 'project(ttaenc LANGUAGES C)'  >> CMakeLists.txt
         echo 'set(CMAKE_C_FLAGS "-Wall -O3 -fomit-frame-pointer -funroll-loops -fforce-addr -falign-functions=4")'  >> CMakeLists.txt
@@ -157,11 +151,39 @@ jobs:
 
 
     # ===========================================
+    - name: Build flacon
+      run: |
+        mkdir ${HOME}/flacon && cd ${HOME}/flacon
+
+        cmake -Bbuild -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE ${GITHUB_WORKSPACE}
+        make  -Cbuild -j8
+        cmake --install build --prefix "${APP_DIR}"
+
+
+    # ===========================================
     - name: CHECK
       run: |
         echo "= ${APP_DIR} ======================"
         find ${APP_DIR}
         echo "==================================="
+
+
+    # ===========================================
+    - name: Build AppImage dir
+      working-directory: ${APP_DIR}
+      run: |
+        echo "==============================="
+        export PATH=~/tools/appimage/usr/bin:$PATH
+        export LD_LIBRARY_PATH=~/tools/appimage/usr/lib
+        echo "= Create symlinks ============="
+        ln -sf usr/bin/flacon AppRun
+        ln -sf usr/share/icons/hicolor/128x128/apps/flacon.png .
+        ln -sf usr/share/applications/flacon.desktop .
+        echo "= Add programs ================"
+        for prog in ${PROGRAMS}; do echo " * Copy ${prog}"; src=$(which "$prog"); dest=${src#/}; cp -f "${src}" "usr/bin/"; done
+        echo "= Build image ================="
+        linuxdeploy --verbosity=3  --plugin qt --appdir "${APP_DIR}"
+
 
 
 
