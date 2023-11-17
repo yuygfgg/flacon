@@ -168,7 +168,7 @@ jobs:
       run: |
         mkdir ${HOME}/flacon && cd ${HOME}/flacon
 
-        cmake -Bbuild -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE ${GITHUB_WORKSPACE}
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE ${GITHUB_WORKSPACE}
         make  -Cbuild -j8
         cmake --install build --prefix "${APP_DIR}"
 
