@@ -80,9 +80,9 @@ jobs:
           zlib1g-dev:${ARCH}
 
         echo "============================"
-        ls /usr/lib
+        ls /usr/lib/aarch64-linux-gnu
         echo "============================"
-        file /usr/lib
+        find /usr/lib
         echo "============================"
 
     - name: Create toolchain file
