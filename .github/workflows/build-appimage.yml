@@ -21,135 +21,61 @@ jobs:
       image: debian:bookworm
 
     steps:
-    - name: Set env
-      run: |
-        cat /etc/*rel*
-        mount
-
     # - uses: actions/checkout@v3
 
-    # - name: Set env
-    #   run: |
-    #     export ARCH=${{matrix.arch}}
-    #     echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
-    #     echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}"   >> ${GITHUB_ENV}
-    #     echo "ARCH=${{ matrix.arch }}"                 >> ${GITHUB_ENV}
-    #     echo "APP_DIR=${HOME}/APP"                     >> ${GITHUB_ENV}
+    - name: Set env
+      run: |
+        export ARCH=${{matrix.arch}}
+        echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
+        echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}"   >> ${GITHUB_ENV}
+        echo "ARCH=${{ matrix.arch }}"                 >> ${GITHUB_ENV}
+        echo "APP_DIR=${HOME}/APP"                     >> ${GITHUB_ENV}
 
-    #     [[ "${GITHUB_REF_TYPE}"  = "tag" ]] && echo APPIMAGE_NAME="flacon-${GITHUB_REF_NAME:1}-x86_64.AppImage" >> $GITHUB_ENV
-    #     [[ "${GITHUB_REF_TYPE}" != "tag" ]] && echo APPIMAGE_NAME="flacon-$(date +%Y.%m.%d_%H.%M.%S)-x86_64.AppImage" >> $GITHUB_ENV
+        [[ "${GITHUB_REF_TYPE}"  = "tag" ]] && echo APPIMAGE_NAME="flacon-${GITHUB_REF_NAME:1}-x86_64.AppImage" >> $GITHUB_ENV
+        [[ "${GITHUB_REF_TYPE}" != "tag" ]] && echo APPIMAGE_NAME="flacon-$(date +%Y.%m.%d_%H.%M.%S)-x86_64.AppImage" >> $GITHUB_ENV
 
-    #     source /etc/lsb-release
-    #     cat /etc/lsb-release >> ${GITHUB_ENV}
-    #     dpkg-architecture -A ${{ matrix.arch }} --list >> ${GITHUB_ENV}
+        source /etc/lsb-release
+        cat /etc/lsb-release >> ${GITHUB_ENV}
+        dpkg-architecture -A ${{ matrix.arch }} --list >> ${GITHUB_ENV}
 
-    #     echo "==============================="
-    #     export
-    #     echo "-------------------------------"
-    #     cat $GITHUB_ENV
-    #     echo "==============================="
-
-
-    # - name: Prepare
-    #   run: |
-    #     sudo echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
-    #     sudo dpkg --add-architecture ${{matrix.arch}}
-    #     sudo sed -i'' -E 's/^(deb|deb-src) /\1 [arch=amd64,i386] /' /etc/apt/sources.list
-
-    #     echo "# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" | sudo tee -a /etc/apt/sources.list
-    #     echo "deb [arch=${{matrix.arch}}] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs) main restricted universe" | sudo tee -a /etc/apt/sources.list
-    #     echo "deb [arch=${{matrix.arch}}] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-updates main restricted universe" | sudo tee -a /etc/apt/sources.list
-    #     echo "deb [arch=${{matrix.arch}}] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-security main restricted universe" | sudo tee -a /etc/apt/sources.list
-
-    #     sudo apt-get -y update > /dev/null
-
-    # - name: Installing packages
-    #   run: |
-    #     sudo apt-get -y --no-install-recommends install locales > /dev/null
-    #     sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+        echo "==============================="
+        export
+        echo "-------------------------------"
+        cat $GITHUB_ENV
+        echo "==============================="
 
 
-    #     sudo apt -y remove \
-    #       build-essential \
-    #       cpp \
-    #       cpp-9 \
-    #       g++ \
-    #       g++-9 \
-    #       gcc \
-    #       gcc-9 \
-    #       gfortran \
-    #       gfortran-9 \
-    #       libcairo2-dev \
-    #       libgdk-pixbuf2.0-dev \
-    #       libglib2.0-dev \
-    #       libmagickcore-6.q16-dev \
-    #       libmagickcore-dev \
-    #       libmagickwand-6.q16-dev \
-    #       libmagickwand-dev \
-    #       libpcre2-16-0 \
-    #       libpcre2-dev \
-    #       librsvg2-dev \
-    #       libsecret-1-dev \
-    #       libselinux1-dev \
-    #       libtool \
-    #       php7.4-dev \
-    #       php8.0-dev \
-    #       php8.1-dev \
-    #       php8.2-dev \
-    #       r-base-dev \
-    #       build-essential \
-    #       nginx \
-    #       apache2 \
-    #       mono-runtime-common \
-    #       default-jre-headless \
-    #       java8-runtime-headless \
-    #       ant \
-    #       apache2-bin
+    - name: Prepare
+      run: |
+        sudo echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
+        sudo dpkg --add-architecture ${{matrix.arch}}
+        sudo apt-get -y update > /dev/null
+        sudo apt-get -y --no-install-recommends install locales > /dev/null
+        sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-    #     echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    #     apt list --installed
-    #     echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    - name: Installing packages
+      run: |
+        sudo apt-get -y install \
+          gcc-${DEB_TARGET_GNU_TYPE} \
+          g++-${DEB_TARGET_GNU_TYPE} \
+          pkg-config \
+          dpkg-dev \
+          cross-config \
+          cmake \
+          git \
+          jq
 
+        sudo apt-get -y -f install \
+          qtbase5-dev:${ARCH} \
+          qttools5-dev-tools:${ARCH} \
+          qttools5-dev:${ARCH} \
+          libuchardet-dev:${ARCH} \
+          libtag1-dev:${ARCH} \
+          zlib1g-dev:${ARCH}
 
-    #     sudo apt-get -y install aptitude
-
-    #     echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
-    #     aptitude why-not  qtbase5-dev:${ARCH}
-    #     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    #     sudo aptitude -y install qtbase5-dev:${ARCH}
-    #     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    #     sudo apt-get -y --no-install-recommends install qtbase5-dev:${ARCH}
-    #     echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
-
-
-
-    # #     sudo apt-get -y install \
-    # #       gcc-${DEB_TARGET_GNU_TYPE} \
-    # #       g++-${DEB_TARGET_GNU_TYPE} \
-    # #       pkg-config \
-    # #       dpkg-dev \
-    # #       cross-config \
-    # #       cmake \
-    # #       git \
-    # #       jq \
-    # #       aptitude
-
-    # #     echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
-    # #     sudo aptitude -y install qtbase5-dev:${ARCH}
-    # #     echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
-
-
-    # #     sudo apt-get -y -f install \
-    # #       qtbase5-dev:${ARCH} \
-    # #       qttools5-dev-tools:${ARCH} \
-    # #       qttools5-dev:${ARCH} \
-    # #       libuchardet-dev:${ARCH} \
-    # #       libtag1-dev:${ARCH} \
-    # #       zlib1g-dev:${ARCH}
-
-    # #     echo "============================"
-    # #     ls /usr/lib/aarch64-linux-gnu
-    # #     echo "============================"
+        echo "============================"
+        ls /usr/lib/aarch64-linux-gnu
+        echo "============================"
     # #     find /usr/lib
     # #     echo "============================"
 
