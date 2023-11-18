@@ -72,6 +72,8 @@ jobs:
           java8-runtime-headless \
           ant
 
+        sudo apt-get -y install aptitude
+
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
         sudo aptitude -y install qtbase5-dev:${ARCH}
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
