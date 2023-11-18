@@ -61,6 +61,10 @@ jobs:
         sudo apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+        sudo apt remove r-base-dev
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+
         sudo apt -y remove \
           nginx \
           pache2 \
@@ -77,6 +81,8 @@ jobs:
         sudo apt-get -y install aptitude
 
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
+        aptitude why libpcre2-8-0
+        echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         aptitude why libpcre2-8-0
         echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         sudo aptitude -y install libpcre2-8-0:${ARCH}
