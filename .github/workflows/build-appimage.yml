@@ -21,7 +21,7 @@ jobs:
       image: debian:bookworm
 
     steps:
-    # - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
     - name: Prepare
       shell: bash
@@ -51,14 +51,8 @@ jobs:
         echo "==============================="
 
 
-    # - name: Prepare
-    #   run: |
-    #     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-    #     dpkg --add-architecture ${{matrix.arch}}
-    #     apt-get -y update > /dev/null
-    #     apt-get -y --no-install-recommends install locales > /dev/null
-    #     sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
+    # ===========================================
     - name: Installing packages
       run: |
         apt-get -y install \
@@ -79,111 +73,110 @@ jobs:
           libtag1-dev:${ARCH} \
           zlib1g-dev:${ARCH}
 
-        echo "============================"
-        ls /usr/lib/aarch64-linux-gnu
-        echo "============================"
-    # #     find /usr/lib
-    # #     echo "============================"
 
-    # # - name: Create toolchain file
-    # #   run: |
-    # #     echo ""                                                                                                          > ${HOME}/toolchain.cmake
-    # #     echo "set(TOLLCHAIN_DIR /usr)"                                                                                  >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_SYSTEM_NAME Linux)"                                                                             >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_SYSTEM_PROCESSOR $DEB_TARGET_GNU_CPU)"                                                          >> ${HOME}/toolchain.cmake
 
-    # #     echo "set(CMAKE_C_COMPILER   \${TOLLCHAIN_DIR}/bin/${DEB_TARGET_GNU_TYPE}-gcc)"                                 >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_CXX_COMPILER \${TOLLCHAIN_DIR}/bin/${DEB_TARGET_GNU_TYPE}-g++)"                                 >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_SYSROOT /)"                                                                                     >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_FIND_ROOT_PATH /usr/${DEB_TARGET_GNU_TYPE} /usr/lib/${DEB_TARGET_GNU_TYPE})"                    >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_PREFIX_PATH /usr/lib/${DEB_TARGET_GNU_TYPE}/cmake /usr/lib/${DEB_TARGET_GNU_TYPE}/pkgconfig)"   >> ${HOME}/toolchain.cmake
+    # ===========================================
+    - name: Create toolchain file
+      run: |
+        echo ""                                                                                                          > ${HOME}/toolchain.cmake
+        echo "set(TOLLCHAIN_DIR /usr)"                                                                                  >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_SYSTEM_NAME Linux)"                                                                             >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_SYSTEM_PROCESSOR $DEB_TARGET_GNU_CPU)"                                                          >> ${HOME}/toolchain.cmake
 
-    # #     echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)"                                                              >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)"                                                              >> ${HOME}/toolchain.cmake
-    # #     echo "set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)"                                                              >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_C_COMPILER   \${TOLLCHAIN_DIR}/bin/${DEB_TARGET_GNU_TYPE}-gcc)"                                 >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_CXX_COMPILER \${TOLLCHAIN_DIR}/bin/${DEB_TARGET_GNU_TYPE}-g++)"                                 >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_SYSROOT /)"                                                                                     >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_FIND_ROOT_PATH /usr/${DEB_TARGET_GNU_TYPE} /usr/lib/${DEB_TARGET_GNU_TYPE})"                    >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_PREFIX_PATH /usr/lib/${DEB_TARGET_GNU_TYPE}/cmake /usr/lib/${DEB_TARGET_GNU_TYPE}/pkgconfig)"   >> ${HOME}/toolchain.cmake
 
-    # #     echo "set(PKG_CONFIG_EXECUTABLE /bin/aarch64-linux-gnu-pkg-config)"                                             >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)"                                                              >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)"                                                              >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)"                                                              >> ${HOME}/toolchain.cmake
 
-    # #     echo "== TOOLCHAIN FILE ========================================================================================"
-    # #     cat ${HOME}/toolchain.cmake
+        echo "set(PKG_CONFIG_EXECUTABLE /bin/aarch64-linux-gnu-pkg-config)"                                             >> ${HOME}/toolchain.cmake
+
+        echo "== TOOLCHAIN FILE ========================================================================================"
+        cat ${HOME}/toolchain.cmake
 
 
 
-    # # # ===========================================
-    # # - name: Build alacenc
-    # #   run: |
+    # ===========================================
+    - name: Build alacenc
+      run: |
+        mkdir ${HOME}/alacenc && cd ${HOME}/alacenc
 
-    # #     mkdir ${HOME}/alacenc && cd ${HOME}/alacenc
+        export URL=$(curl -s -L  'https://api.github.com/repos/flacon/alacenc/releases/latest' | jq -r '.tarball_url')
+        echo "Download $URL"
+        curl -s -L "$URL" > sources.tgz
+        tar -xf sources.tgz --strip-components=1
 
-    # #     export URL=$(curl -s -L  'https://api.github.com/repos/flacon/alacenc/releases/latest' | jq -r '.tarball_url')
-    # #     echo "Download $URL"
-    # #     curl -s -L "$URL" > sources.tgz
-    # #     tar -xf sources.tgz --strip-components=1
-
-    # #     cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${APP_DIR}/usr .
-    # #     make  -Cbuild -j4
-    # #     cmake --install build --prefix "${APP_DIR}"
-
-
-    # # # ===========================================
-    # # - name: Build ttaenc
-    # #   run: |
-
-    # #     mkdir ${HOME}/ttaenc && cd ${HOME}/ttaenc
-
-    # #     export URL=$(curl -s -L  'https://api.github.com/repos/flacon/flacon.third-party/releases/latest' | jq -r '.tarball_url')
-    # #     echo "Download $URL"
-    # #     curl -s -L "$URL" > sources.tgz
-    # #     tar -xf sources.tgz --strip-components=1
-    # #     cd ttaenc/ttaenc-3.4.1
-
-    # #     echo 'project(ttaenc LANGUAGES C)'  >> CMakeLists.txt
-    # #     echo 'set(CMAKE_C_FLAGS "-Wall -O3 -fomit-frame-pointer -funroll-loops -fforce-addr -falign-functions=4")'  >> CMakeLists.txt
-    # #     echo 'if ( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )'  >> CMakeLists.txt
-    # #     echo '  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse")'  >> CMakeLists.txt
-    # #     echo 'endif()'  >> CMakeLists.txt
-    # #     echo 'add_executable(ttaenc ttaenc.h ttaenc.c)'  >> CMakeLists.txt
-    # #     echo 'install(TARGETS ttaenc RUNTIME DESTINATION bin)'  >> CMakeLists.txt
-
-    # #     echo "===================================================="
-    # #     cat CMakeLists.txt
-    # #     echo "===================================================="
-
-    # #     cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
-    # #     make  -Cbuild -j4
-    # #     cmake --install build --prefix "${APP_DIR}"
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${APP_DIR}/usr .
+        make  -Cbuild -j4
+        cmake --install build --prefix "${APP_DIR}"
 
 
-    # # # ===========================================
-    # # - name: Build mac
-    # #   run: |
 
-    # #     mkdir ${HOME}/mac && cd ${HOME}/mac
+    # ===========================================
+    - name: Build ttaenc
+      run: |
+        mkdir ${HOME}/ttaenc && cd ${HOME}/ttaenc
 
-    # #     curl -s -L "$MAC_URL" > sources.zip
-    # #     unzip sources.zip
+        export URL=$(curl -s -L  'https://api.github.com/repos/flacon/flacon.third-party/releases/latest' | jq -r '.tarball_url')
+        echo "Download $URL"
+        curl -s -L "$URL" > sources.tgz
+        tar -xf sources.tgz --strip-components=1
+        cd ttaenc/ttaenc-3.4.1
 
-    # #     cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
-    # #     make  -Cbuild -j4
-    # #     cmake --install build --prefix "${APP_DIR}"
+        echo 'project(ttaenc LANGUAGES C)'  >> CMakeLists.txt
+        echo 'set(CMAKE_C_FLAGS "-Wall -O3 -fomit-frame-pointer -funroll-loops -fforce-addr -falign-functions=4")'  >> CMakeLists.txt
+        echo 'if ( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )'  >> CMakeLists.txt
+        echo '  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse")'  >> CMakeLists.txt
+        echo 'endif()'  >> CMakeLists.txt
+        echo 'add_executable(ttaenc ttaenc.h ttaenc.c)'  >> CMakeLists.txt
+        echo 'install(TARGETS ttaenc RUNTIME DESTINATION bin)'  >> CMakeLists.txt
+
+        echo "===================================================="
+        cat CMakeLists.txt
+        echo "===================================================="
+
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
+        make  -Cbuild -j4
+        cmake --install build --prefix "${APP_DIR}"
 
 
-    # # # ===========================================
-    # # - name: Build flacon
-    # #   run: |
-    # #     mkdir ${HOME}/flacon && cd ${HOME}/flacon
 
-    # #     cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE ${GITHUB_WORKSPACE}
-    # #     make  -Cbuild -j8
-    # #     cmake --install build --prefix "${APP_DIR}"
+    # ===========================================
+    - name: Build mac
+      run: |
+        mkdir ${HOME}/mac && cd ${HOME}/mac
+
+        curl -s -L "$MAC_URL" > sources.zip
+        unzip sources.zip
+
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
+        make  -Cbuild -j4
+        cmake --install build --prefix "${APP_DIR}"
 
 
-    # # # ===========================================
-    # # - name: CHECK
-    # #   run: |
-    # #     echo "= ${APP_DIR} ======================"
-    # #     find ${APP_DIR}
-    # #     echo "==================================="
+
+    # ===========================================
+    - name: Build flacon
+      run: |
+        ls
+        mkdir ${HOME}/flacon && cd ${HOME}/flacon
+
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE ${GITHUB_WORKSPACE}
+        make  -Cbuild -j8
+        cmake --install build --prefix "${APP_DIR}"
+
+
+
+    # ===========================================
+    - name: CHECK
+      run: |
+        echo "= ${APP_DIR} ======================"
+        find ${APP_DIR}
+        echo "==================================="
 
 
     # # # ===========================================
