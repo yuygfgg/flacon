@@ -42,6 +42,7 @@ jobs:
         cat $GITHUB_ENV
         echo "==============================="
 
+
     - name: Prepare
       run: |
         sudo echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
@@ -59,6 +60,12 @@ jobs:
       run: |
         sudo apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+
+        sudo apt remove libpcre2
+        echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
+        sudo aptitude -y install qtbase5-dev:${ARCH}
+        echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
+
 
         sudo apt-get -y install \
           gcc-${DEB_TARGET_GNU_TYPE} \
