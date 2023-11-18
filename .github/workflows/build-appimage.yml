@@ -75,8 +75,11 @@ jobs:
         sudo apt-get -y install aptitude
 
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
-        sudo aptitude -y install qtbase5-dev:${ARCH}
+        aptitude why libpcre2-8-0
+        echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        sudo aptitude -y install libpcre2-8-0:${ARCH}
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
+
 
 
         sudo apt-get -y install \
