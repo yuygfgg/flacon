@@ -195,7 +195,7 @@ jobs:
 
     # ===========================================
     - name: Build AppImage dir
-      working-directory: ${env.APP_DIR}
+      working-directory: ${{env.APP_DIR}}
       run: |
         pwd
         echo "==============================="
@@ -219,7 +219,7 @@ jobs:
 
     # ===========================================
     - name: Check external programs
-      working-directory: ${env.APP_DIR}
+      working-directory: ${{env.APP_DIR}}
       run: |
         scripts/check-extprograms.sh . ${APP_DIR}/usr/bin
 
