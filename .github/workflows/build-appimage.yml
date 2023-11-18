@@ -28,7 +28,7 @@ jobs:
       run: |
         source /etc/os-release
         echo 'debconf debconf/frontend select Noninteractive' |  debconf-set-selections
-        echo "deb http://deb.debian.org/debian ${VERSION_CODENAME} main contrib non-free" >> sources.list
+        echo "deb http://deb.debian.org/debian ${VERSION_CODENAME} main contrib non-free" >> /etc/apt/sources.list
         dpkg --add-architecture ${{matrix.arch}}
         apt-get -y update > /dev/null
         apt-get -y --no-install-recommends install locales > /dev/null
