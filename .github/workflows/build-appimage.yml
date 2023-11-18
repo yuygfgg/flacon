@@ -32,12 +32,12 @@ jobs:
         echo "ARCH=${{ matrix.arch }}"                 >> ${GITHUB_ENV}
         echo "APP_DIR=${HOME}/APP"                     >> ${GITHUB_ENV}
 
-        [[ "${GITHUB_REF_TYPE}"  = "tag" ]] && echo APPIMAGE_NAME="flacon-${GITHUB_REF_NAME:1}-x86_64.AppImage" >> $GITHUB_ENV
-        [[ "${GITHUB_REF_TYPE}" != "tag" ]] && echo APPIMAGE_NAME="flacon-$(date +%Y.%m.%d_%H.%M.%S)-x86_64.AppImage" >> $GITHUB_ENV
-
         source /etc/lsb-release
         cat /etc/lsb-release >> ${GITHUB_ENV}
         dpkg-architecture -A ${{ matrix.arch }} --list >> ${GITHUB_ENV}
+
+        [[ "${GITHUB_REF_TYPE}"  = "tag" ]] && echo APPIMAGE_NAME="flacon-${GITHUB_REF_NAME:1}-x86_64.AppImage" >> $GITHUB_ENV
+        [[ "${GITHUB_REF_TYPE}" != "tag" ]] && echo APPIMAGE_NAME="flacon-$(date +%Y.%m.%d_%H.%M.%S)-x86_64.AppImage" >> $GITHUB_ENV
 
         echo "==============================="
         export
