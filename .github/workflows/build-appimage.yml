@@ -66,8 +66,36 @@ jobs:
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
         sudo apt -y remove \
+          build-essential \
+          cpp \
+          cpp-9 \
+          g++ \
+          g++-9 \
+          gcc \
+          gcc-9 \
+          gfortran \
+          gfortran-9 \
+          libcairo2-dev \
+          libgdk-pixbuf2.0-dev \
+          libglib2.0-dev \
+          libmagickcore-6.q16-dev \
+          libmagickcore-dev \
+          libmagickwand-6.q16-dev \
+          libmagickwand-dev \
+          libpcre2-16-0 \
+          libpcre2-dev \
+          librsvg2-dev \
+          libsecret-1-dev \
+          libselinux1-dev \
+          libtool \
+          php7.4-dev \
+          php8.0-dev \
+          php8.1-dev \
+          php8.2-dev \
+          r-base-dev \
+          build-essential \
           nginx \
-          pache2 \
+          apache2 \
           mono-runtime-common \
           default-jre-headless \
           java8-runtime-headless \
