@@ -69,6 +69,7 @@ jobs:
           qttools5-dev-tools
 
         apt-get -y -f install \
+          pkg-config:${ARCH} \
           qtbase5-dev:${ARCH} \
           qttools5-dev:${ARCH} \
           libuchardet-dev:${ARCH} \
@@ -95,6 +96,7 @@ jobs:
         echo "set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)"                                                              >> ${HOME}/toolchain.cmake
 
         echo "set(PKG_CONFIG_EXECUTABLE /bin/${DEB_TARGET_GNU_TYPE}-pkg-config)"                                        >> ${HOME}/toolchain.cmake
+        echo "set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES /usr/include /usr/include/${DEB_TARGET_GNU_TYPE})"             >> ${HOME}/toolchain.cmake
 
         echo "== TOOLCHAIN FILE ========================================================================================"
         cat ${HOME}/toolchain.cmake
