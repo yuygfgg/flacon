@@ -31,7 +31,7 @@ jobs:
         apt-get -y update > /dev/null
         apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-        apt-get -y --no-install-recommends dpkg-dev > /dev/null
+        apt-get -y --no-install-recommends install dpkg-dev > /dev/null
 
         export ARCH=${{matrix.arch}}
         echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
