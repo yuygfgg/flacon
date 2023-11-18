@@ -72,7 +72,7 @@ jobs:
           aptitude
 
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
-        aptitude why-not qtbase5-dev:${ARCH}
+        sudo aptitude -y install qtbase5-dev:${ARCH}
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
 
 
