@@ -64,7 +64,8 @@ jobs:
           cmake \
           git \
           curl \
-          jq
+          jq \
+          unzip
 
         apt-get -y -f install \
           qtbase5-dev:${ARCH} \
