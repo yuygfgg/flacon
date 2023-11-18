@@ -197,7 +197,7 @@ jobs:
     - name: Build AppImage dir
       working-directory: ${{env.APP_DIR}}
       run: |
-        pwd
+        find .
         echo "==============================="
         export PATH=~/tools/appimage/usr/bin:$PATH
         export LD_LIBRARY_PATH=~/tools/appimage/usr/lib
