@@ -61,9 +61,11 @@ jobs:
         sudo apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-        sudo apt -y --allow-remove-essential remove \
-          libpcre2-16-0 \
-          libpcre2-8-0 \
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+        apt list --installed
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+
+        sudo apt -y remove \
           nginx \
           mono-runtime-common \
           default-jre-headless \
