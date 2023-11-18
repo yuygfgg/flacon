@@ -29,7 +29,8 @@ jobs:
         source /etc/os-release
         echo 'debconf debconf/frontend select Noninteractive' |  debconf-set-selections
         dpkg --add-architecture ${{matrix.arch}}
-        echo "deb http://http.us.debian.org/debian ${VERSION_CODENAME} main contrib non-free" > sources.list
+        echo "deb http://http.us.debian.org/debian ${VERSION_CODENAME} main contrib non-free"
+        echo "deb http://http.us.debian.org/debian ${VERSION_CODENAME} main contrib non-free" >> sources.list
         apt-get -y update > /dev/null
         apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
