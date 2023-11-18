@@ -68,6 +68,7 @@ jobs:
           unzip
 
         apt-get -y -f install \
+          pkgconf:${ARCH} \
           qtbase5-dev:${ARCH} \
           qttools5-dev-tools:${ARCH} \
           qttools5-dev:${ARCH} \
