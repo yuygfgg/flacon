@@ -63,6 +63,7 @@ jobs:
           cross-config \
           cmake \
           git \
+          curl \
           jq
 
         apt-get -y -f install \
