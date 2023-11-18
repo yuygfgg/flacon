@@ -126,7 +126,7 @@ jobs:
 
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${APP_DIR}/usr .
         make  -Cbuild -j4
-        cmake --install build --prefix "${APP_DIR}"
+        cmake --install build --prefix "${APP_DIR}/usr"
 
 
 
@@ -155,7 +155,7 @@ jobs:
 
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
         make  -Cbuild -j4
-        cmake --install build --prefix "${APP_DIR}"
+        cmake --install build --prefix "${APP_DIR}/usr"
 
 
 
@@ -169,7 +169,7 @@ jobs:
 
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
         make  -Cbuild -j4
-        cmake --install build --prefix "${APP_DIR}"
+        cmake --install build --prefix "${APP_DIR}/usr"
 
 
 
@@ -180,7 +180,7 @@ jobs:
 
         cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DAPPIMAGE_BUNDLE=Yes -DCMAKE_BUILD_TYPE=$BUILD_TYPE ${GITHUB_WORKSPACE}
         make  -Cbuild -j8
-        cmake --install build --prefix "${APP_DIR}"
+        cmake --install build --prefix "${APP_DIR}/usr"
 
 
 
@@ -213,6 +213,7 @@ jobs:
 
         echo "= Build image ================="
         linuxdeploy --verbosity=3  --plugin qt --appdir "${APP_DIR}"
+
 
 
 
