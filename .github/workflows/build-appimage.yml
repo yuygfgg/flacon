@@ -72,7 +72,7 @@ jobs:
           aptitude
 
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
-        aptitude why qtbase5-dev:${ARCH}
+        aptitude why-not qtbase5-dev:${ARCH}
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
 
 
