@@ -61,6 +61,7 @@ jobs:
         sudo apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
+
         sudo apt -y remove \
           build-essential \
           cpp \
@@ -95,8 +96,7 @@ jobs:
           mono-runtime-common \
           default-jre-headless \
           java8-runtime-headless \
-          ant \
-          libpcre2-8-0
+          ant
 
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
         apt list --installed
@@ -108,9 +108,9 @@ jobs:
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
         aptitude why libpcre2-8-0
         # echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        #sudo apt- -y remove libpcre2-8-0
-        echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         sudo aptitude -y install qtbase5-dev:${ARCH}
+        echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        sudo apt-get -y --no-install-recommends install qtbase5-dev:${ARCH}
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
 
 
