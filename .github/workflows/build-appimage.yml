@@ -61,7 +61,7 @@ jobs:
         sudo apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-        sudo apt remove libpcre2
+        sudo apt -y remove libpcre2-16-0 libpcre2-8-0
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
         sudo aptitude -y install qtbase5-dev:${ARCH}
         echo "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
