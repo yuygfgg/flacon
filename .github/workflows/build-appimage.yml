@@ -23,15 +23,15 @@ jobs:
     steps:
     # - uses: actions/checkout@v3
 
-    - name: Set env
+    - name: Prepare
       shell: bash
       run: |
-        sudo echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
-        sudo dpkg --add-architecture ${{matrix.arch}}
-        sudo apt-get -y update > /dev/null
-        sudo apt-get -y --no-install-recommends install locales > /dev/null
+        echo 'debconf debconf/frontend select Noninteractive' |  debconf-set-selections
+        dpkg --add-architecture ${{matrix.arch}}
+        apt-get -y update > /dev/null
+        apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-        sudo apt-get -y --no-install-recommends dpkg-dev > /dev/null
+        apt-get -y --no-install-recommends dpkg-dev > /dev/null
 
         export ARCH=${{matrix.arch}}
         echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
@@ -51,17 +51,17 @@ jobs:
         echo "==============================="
 
 
-    - name: Prepare
-      run: |
-        sudo echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
-        sudo dpkg --add-architecture ${{matrix.arch}}
-        sudo apt-get -y update > /dev/null
-        sudo apt-get -y --no-install-recommends install locales > /dev/null
-        sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+    # - name: Prepare
+    #   run: |
+    #     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    #     dpkg --add-architecture ${{matrix.arch}}
+    #     apt-get -y update > /dev/null
+    #     apt-get -y --no-install-recommends install locales > /dev/null
+    #     sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
     - name: Installing packages
       run: |
-        sudo apt-get -y install \
+        apt-get -y install \
           gcc-${DEB_TARGET_GNU_TYPE} \
           g++-${DEB_TARGET_GNU_TYPE} \
           pkg-config \
@@ -71,7 +71,7 @@ jobs:
           git \
           jq
 
-        sudo apt-get -y -f install \
+        apt-get -y -f install \
           qtbase5-dev:${ARCH} \
           qttools5-dev-tools:${ARCH} \
           qttools5-dev:${ARCH} \
