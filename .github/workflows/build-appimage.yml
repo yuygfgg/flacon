@@ -26,12 +26,15 @@ jobs:
     - name: Prepare
       shell: bash
       run: |
+        source /etc/os-release
         echo 'debconf debconf/frontend select Noninteractive' |  debconf-set-selections
         dpkg --add-architecture ${{matrix.arch}}
+        echo "deb http://http.us.debian.org/debian ${VERSION_CODENAME} main contrib non-free" > sources.list
         apt-get -y update > /dev/null
         apt-get -y --no-install-recommends install locales > /dev/null
         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
         apt-get -y --no-install-recommends install dpkg-dev > /dev/null
+        
 
         export ARCH=${{matrix.arch}}
         echo "RELEASE_DATE=$(date +%Y.%m.%d_%H.%M.%S)" >> ${GITHUB_ENV}
@@ -76,6 +79,14 @@ jobs:
           libtag1-dev:${ARCH} \
           zlib1g-dev:${ARCH}
 
+        apt-get -y --no-install-recommends install \
+          flac:${ARCH} \
+          vorbis-tools:${ARCH} \
+          wavpack:${ARCH} \
+          lame:${ARCH} \
+          faac:${ARCH} \
+          opus-tools:${ARCH} \
+          sox:${ARCH}
 
 
     # ===========================================
@@ -103,62 +114,62 @@ jobs:
 
 
 
-    # # ===========================================
-    # - name: Build alacenc
-    #   run: |
-    #     mkdir ${HOME}/alacenc && cd ${HOME}/alacenc
+    # ===========================================
+    - name: Build alacenc
+      run: |
+        mkdir ${HOME}/alacenc && cd ${HOME}/alacenc
 
-    #     export URL=$(curl -s -L  'https://api.github.com/repos/flacon/alacenc/releases/latest' | jq -r '.tarball_url')
-    #     echo "Download $URL"
-    #     curl -s -L "$URL" > sources.tgz
-    #     tar -xf sources.tgz --strip-components=1
+        export URL=$(curl -s -L  'https://api.github.com/repos/flacon/alacenc/releases/latest' | jq -r '.tarball_url')
+        echo "Download $URL"
+        curl -s -L "$URL" > sources.tgz
+        tar -xf sources.tgz --strip-components=1
 
-    #     cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${APP_DIR}/usr .
-    #     make  -Cbuild -j4
-    #     cmake --install build --prefix "${APP_DIR}"
-
-
-
-    # # ===========================================
-    # - name: Build ttaenc
-    #   run: |
-    #     mkdir ${HOME}/ttaenc && cd ${HOME}/ttaenc
-
-    #     export URL=$(curl -s -L  'https://api.github.com/repos/flacon/flacon.third-party/releases/latest' | jq -r '.tarball_url')
-    #     echo "Download $URL"
-    #     curl -s -L "$URL" > sources.tgz
-    #     tar -xf sources.tgz --strip-components=1
-    #     cd ttaenc/ttaenc-3.4.1
-
-    #     echo 'project(ttaenc LANGUAGES C)'  >> CMakeLists.txt
-    #     echo 'set(CMAKE_C_FLAGS "-Wall -O3 -fomit-frame-pointer -funroll-loops -fforce-addr -falign-functions=4")'  >> CMakeLists.txt
-    #     echo 'if ( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )'  >> CMakeLists.txt
-    #     echo '  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse")'  >> CMakeLists.txt
-    #     echo 'endif()'  >> CMakeLists.txt
-    #     echo 'add_executable(ttaenc ttaenc.h ttaenc.c)'  >> CMakeLists.txt
-    #     echo 'install(TARGETS ttaenc RUNTIME DESTINATION bin)'  >> CMakeLists.txt
-
-    #     echo "===================================================="
-    #     cat CMakeLists.txt
-    #     echo "===================================================="
-
-    #     cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
-    #     make  -Cbuild -j4
-    #     cmake --install build --prefix "${APP_DIR}"
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${APP_DIR}/usr .
+        make  -Cbuild -j4
+        cmake --install build --prefix "${APP_DIR}"
 
 
 
-    # # ===========================================
-    # - name: Build mac
-    #   run: |
-    #     mkdir ${HOME}/mac && cd ${HOME}/mac
+    # ===========================================
+    - name: Build ttaenc
+      run: |
+        mkdir ${HOME}/ttaenc && cd ${HOME}/ttaenc
 
-    #     curl -s -L "$MAC_URL" > sources.zip
-    #     unzip sources.zip
+        export URL=$(curl -s -L  'https://api.github.com/repos/flacon/flacon.third-party/releases/latest' | jq -r '.tarball_url')
+        echo "Download $URL"
+        curl -s -L "$URL" > sources.tgz
+        tar -xf sources.tgz --strip-components=1
+        cd ttaenc/ttaenc-3.4.1
 
-    #     cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
-    #     make  -Cbuild -j4
-    #     cmake --install build --prefix "${APP_DIR}"
+        echo 'project(ttaenc LANGUAGES C)'  >> CMakeLists.txt
+        echo 'set(CMAKE_C_FLAGS "-Wall -O3 -fomit-frame-pointer -funroll-loops -fforce-addr -falign-functions=4")'  >> CMakeLists.txt
+        echo 'if ( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )'  >> CMakeLists.txt
+        echo '  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse")'  >> CMakeLists.txt
+        echo 'endif()'  >> CMakeLists.txt
+        echo 'add_executable(ttaenc ttaenc.h ttaenc.c)'  >> CMakeLists.txt
+        echo 'install(TARGETS ttaenc RUNTIME DESTINATION bin)'  >> CMakeLists.txt
+
+        echo "===================================================="
+        cat CMakeLists.txt
+        echo "===================================================="
+
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
+        make  -Cbuild -j4
+        cmake --install build --prefix "${APP_DIR}"
+
+
+
+    # ===========================================
+    - name: Build mac
+      run: |
+        mkdir ${HOME}/mac && cd ${HOME}/mac
+
+        curl -s -L "$MAC_URL" > sources.zip
+        unzip sources.zip
+
+        cmake -Bbuild -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain.cmake .
+        make  -Cbuild -j4
+        cmake --install build --prefix "${APP_DIR}"
 
 
 
@@ -174,6 +185,46 @@ jobs:
 
 
     # ===========================================
+    - name: Clone tools
+      run: |
+        git clone --depth 1 https://github.com/SokoloffA/nightly-tools.git ~/tools
+        echo PATH=~/tools/appimage/usr/bin:$PATH >> $GITHUB_ENV
+        echo LD_LIBRARY_PATH=~/tools/appimage/usr/lib >> $GITHUB_ENV
+
+
+
+    # ===========================================
+    - name: Build AppImage dir
+      working-directory: ${APP_DIR}
+      run: |
+        pwd
+        echo "==============================="
+        export PATH=~/tools/appimage/usr/bin:$PATH
+        export LD_LIBRARY_PATH=~/tools/appimage/usr/lib
+
+        echo "= Create symlinks ============="
+        ln -sf usr/bin/flacon AppRun
+        ln -sf usr/share/icons/hicolor/128x128/apps/flacon.png .
+        ln -sf usr/share/applications/flacon.desktop .
+
+        echo "= Add programs ================"
+        progs=`echo $PROGRAMS | awk '!/alacenc|ttaenc|mac/' RS=" " ORS=" "`
+        for p in ${progs}; do echo " * Copy ${p}"; cp -f $(which "$p") "${APP_DIR}/usr/bin/"; done
+
+        echo "= Build image ================="
+        linuxdeploy --verbosity=3  --plugin qt --appdir "${APP_DIR}"
+
+
+
+
+    # ===========================================
+    - name: Check external programs
+      working-directory: ${APP_DIR}
+      run: |
+        scripts/check-extprograms.sh . ${APP_DIR}/usr/bin
+
+
+  # ===========================================
     - name: CHECK
       run: |
         echo "= ${APP_DIR} ======================"
